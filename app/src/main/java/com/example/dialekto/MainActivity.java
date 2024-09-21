@@ -2,6 +2,7 @@ package com.example.dialekto;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -15,11 +16,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Fragment fragment = new HomeFragment();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.commit();
 
         chipNavigationBar = findViewById(R.id.bottom_nav);
         chipNavigationBar.setItemSelected(R.id.bottom_nav, true);
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
+
+
 
         chipNavigationBar.setOnItemSelectedListener(new ChipNavigationBar.OnItemSelectedListener() {
             @Override
@@ -52,6 +59,9 @@ public class MainActivity extends AppCompatActivity {
                     Log.e("MainActivity", "Fragment is null for item ID: " + i);
                 }
             }
+
+
+
         });
     }
 }

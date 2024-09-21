@@ -1,13 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/primary"
+    android:padding="16dp"
+    android:gravity="center">
 
+    <!-- Title TextView -->
     <TextView
-        android:id="@+id/home_fragment"
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="DIALEKTO"
+        android:textSize="24sp"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"/>
+
+    <!-- Input Field -->
+    <EditText
+        android:id="@+id/etInput"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Home"
-        android:textSize="28sp"
-        android:gravity="center"/>
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="200dp"
+        android:hint="Type or paste here to translate"
+        android:background="@drawable/rounded_edittext"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:gravity="top"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Row with Spinner 1, Switch, Spinner 2 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="16dp">
+
+        <!-- Column for Select Dialect 1 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp">
+
+            <!-- Select Dialect 1 Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DIALEKTO"
+                android:textColor="@color/white"    />
+
+            <!-- Select Dialect Spinner 1 -->
+            <Spinner
+                android:id="@+id/spinnerDialect1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/dialect_options"/>
+        </LinearLayout>
+
+        <!-- Dialect Switch -->
+        <ImageView
+            android:id="@+id/switchDialect"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/baseline_swap_horiz_24"
+            android:background="@color/secondary"
+            android:layout_margin="10dp"
+            android:layout_gravity="center"/>
+
+        <!-- Column for Select Dialect 2 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp">
+
+            <!-- Select Dialect 2 Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DIALEKTO"
+                android:textColor="@color/white"
+                />
+
+            <!-- Select Dialect Spinner 2 -->
+            <Spinner
+                android:id="@+id/spinnerDialect2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/dialect_options"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <!-- Translation TextView -->
+    <TextView
+        android:id="@+id/tvTranslation"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:text="Translation"
+        android:background="@drawable/rounded_edittext"
+        android:gravity="top"
+        android:padding="16dp"
+        android:layout_marginTop="16dp"/>
+
+
+</LinearLayout>
