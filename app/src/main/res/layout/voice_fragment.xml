@@ -1,14 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:padding="16dp"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/voice_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Voice"
-        android:textSize="28sp"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="VOICE"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Row with Spinner 1, Switch, Spinner 2 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="28dp">
+
+        <!-- Column for Select Dialect 1 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Select Dialect 1 Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="Dialekto"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_marginBottom="2dp"/>
+
+            <!-- Select Dialect Spinner 1 -->
+            <Spinner
+                android:id="@+id/spinnerDialect1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/dialect_options"
+                />
+        </LinearLayout>
+
+        <!-- Dialect Switch -->
+        <ImageButton
+            android:id="@+id/switchDialect"
+            android:layout_width="60dp"
+            android:layout_height="45dp"
+            android:src="@drawable/baseline_swap_horiz_24"
+            android:background="@drawable/rounded_corrner_button"
+            android:layout_margin="5dp"
+            />
+
+        <!-- Column for Select Dialect 2 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Select Dialect 2 Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Dialekto"
+                android:textColor="@color/white"
+                android:layout_marginBottom="2dp"
+                />
+
+            <!-- Select Dialect Spinner 2 -->
+            <Spinner
+                android:id="@+id/spinnerDialect2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/dialect_options"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <ImageButton
+        android:id="@+id/voiceDialect"
+        android:layout_width="90dp"
+        android:layout_height="75dp"
+        android:src="@drawable/baseline_mic_none_24"
+        android:background="@drawable/rounded"
+        android:layout_margin="10dp" />
+
+    <Space
+        android:layout_width="match_parent"
+        android:layout_height="60dp" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        app:cardCornerRadius="35dp"
+        app:cardElevation="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="230dp"
+            android:orientation="vertical"
+            android:background="@color/secondary">
+
+            <!-- Top Section: Audio waveform and play button -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/disabled"
+                android:paddingBottom="8dp">
+
+                <!-- Placeholder for waveform -->
+                <ImageView
+                    android:id="@+id/waveformView"
+                    android:layout_width="200dp"
+                    android:layout_height="50dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="15dp"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/soundwaves" />
+
+                <!-- Play Button -->
+                <ImageButton
+                    android:id="@+id/playButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/baseline_play_circle_24"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:contentDescription="Play Button" />
+            </RelativeLayout>
+
+            <!-- Translation Text -->
+            <TextView
+                android:id="@+id/translationText"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:hint="Translation..."
+                android:textColor="@color/black"
+                android:layout_margin="10dp"
+                android:textSize="16sp"
+                android:paddingTop="8dp" />
+
+            <!-- Bottom Section: Icons -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="right"
+                android:layout_marginEnd="20dp">
+
+                <!-- Like Button -->
+                <ImageView
+                    android:id="@+id/likeIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/baseline_favorite_24"
+                    android:contentDescription="Like" />
+
+                <!-- Volume Icon -->
+                <ImageView
+                    android:id="@+id/volumeIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="12dp"
+                    android:contentDescription="Volume"
+                    android:src="@drawable/baseline_volume_up_24" />
+
+                <!-- Copy Icon -->
+                <ImageView
+                    android:id="@+id/CopyIcon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="12dp"
+                    android:contentDescription="Copy"
+                    android:src="@drawable/baseline_content_copy_24" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>
