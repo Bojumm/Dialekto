@@ -1,14 +1,187 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:padding="16dp"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/camera_fragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Camera"
-        android:textSize="28sp"
-        android:gravity="center"/>
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:text="SCAN"
+        android:fontFamily="@font/aclonica"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/camera_background"
+    android:gravity="center"
+    android:layout_marginTop="10dp">
+
+    <!-- Row with Spinner 1, Switch, Spinner 2 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp">
+
+        <!-- Column for Select Dialect 1 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Select Dialect 1 Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:text="Dialekto"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:layout_marginBottom="2dp"/>
+
+            <!-- Select Dialect Spinner 1 -->
+            <Spinner
+                android:id="@+id/spinnerDialect1"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/dialect_options"
+                />
+        </LinearLayout>
+
+        <!-- Dialect Switch -->
+        <ImageButton
+            android:id="@+id/switchDialect"
+            android:layout_width="60dp"
+            android:layout_height="45dp"
+            android:src="@drawable/baseline_swap_horiz_24"
+            android:background="@drawable/rounded_corrner_button"
+            android:layout_margin="5dp"
+            />
+
+        <!-- Column for Select Dialect 2 -->
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Select Dialect 2 Label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:fontFamily="sans-serif-medium"
+                android:text="Dialekto"
+                android:textColor="@color/white"
+                android:layout_marginBottom="2dp"
+                />
+
+            <!-- Select Dialect Spinner 2 -->
+            <Spinner
+                android:id="@+id/spinnerDialect2"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/spinner_background"
+                android:entries="@array/dialect_options"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageViewProfile"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_insert_photo_24"/>
+
+    <ImageButton
+        android:id="@+id/voiceDialect"
+        android:layout_width="70dp"
+        android:layout_height="55dp"
+        android:src="@drawable/baseline_photo_camera_24"
+        android:background="@drawable/rounded"
+        android:layout_marginTop="12dp" />
+
+</LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Translation TextView -->
+        <TextView
+            android:id="@+id/tvTranslation"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Translation"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:background="@drawable/rounded_edittext"
+            android:gravity="top"
+            android:padding="16dp" />
+
+        <!-- Bottom Section: Icons -->
+        <LinearLayout
+            android:id="@+id/iconsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignBottom="@id/tvTranslation"
+            android:layout_alignEnd="@id/tvTranslation"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Like Button -->
+            <ImageView
+                android:id="@+id/likeIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/baseline_favorite_24"
+                android:contentDescription="Like" />
+
+            <!-- Volume Icon -->
+            <ImageView
+                android:id="@+id/volumeIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Volume"
+                android:src="@drawable/baseline_volume_up_24" />
+
+            <!-- Copy Icon -->
+            <ImageView
+                android:id="@+id/copyIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Copy"
+                android:src="@drawable/baseline_content_copy_24" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

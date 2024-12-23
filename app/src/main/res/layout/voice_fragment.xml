@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:text="VOICE"
+        android:fontFamily="@font/aclonica"
         android:textColor="@color/white"
         android:textSize="24sp"
         android:textStyle="bold"/>

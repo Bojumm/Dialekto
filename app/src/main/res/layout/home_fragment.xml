@@ -118,19 +118,64 @@
     </LinearLayout>
 
 
-    <!-- Translation TextView -->
-    <TextView
-        android:id="@+id/tvTranslation"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/black"
-        android:textSize="18sp"
-        android:text="Translation"
-        android:background="@drawable/rounded_edittext"
-        android:gravity="top"
-        android:padding="16dp"
-        android:layout_marginTop="16dp"/>
+        android:layout_height="wrap_content">
+
+        <!-- Translation TextView -->
+        <TextView
+            android:id="@+id/tvTranslation"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:text="Translation"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:background="@drawable/rounded_edittext"
+            android:gravity="top"
+            android:padding="16dp" />
+
+        <!-- Bottom Section: Icons -->
+        <LinearLayout
+            android:id="@+id/iconsLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignBottom="@id/tvTranslation"
+            android:layout_alignEnd="@id/tvTranslation"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="12dp">
+
+            <!-- Like Button -->
+            <ImageView
+                android:id="@+id/likeIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/baseline_favorite_24"
+                android:contentDescription="Like" />
+
+            <!-- Volume Icon -->
+            <ImageView
+                android:id="@+id/volumeIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Volume"
+                android:src="@drawable/baseline_volume_up_24" />
+
+            <!-- Copy Icon -->
+            <ImageView
+                android:id="@+id/copyIcon"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:contentDescription="Copy"
+                android:src="@drawable/baseline_content_copy_24" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
 
 </LinearLayout>
