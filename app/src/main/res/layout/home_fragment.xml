@@ -151,16 +151,16 @@
             <!-- Like Button -->
             <ImageView
                 android:id="@+id/likeIcon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/baseline_favorite_24"
                 android:contentDescription="Like" />
 
             <!-- Volume Icon -->
             <ImageView
                 android:id="@+id/volumeIcon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="8dp"
                 android:contentDescription="Volume"
                 android:src="@drawable/baseline_volume_up_24" />
@@ -168,8 +168,8 @@
             <!-- Copy Icon -->
             <ImageView
                 android:id="@+id/copyIcon"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:layout_marginStart="8dp"
                 android:contentDescription="Copy"
                 android:src="@drawable/baseline_content_copy_24" />

@@ -1,6 +1,8 @@
 package com.example.dialekto;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -12,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +35,10 @@ public class HomeFragment extends Fragment {
     private HashMap<String, String> tagalogToKapampangan;
     private HashMap<String, String> kapampanganToTagalog;
 
+    //For Icon
+    private ImageView like, copy, speech;
+    private TextToSpeech textToSpeech;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,6 +50,10 @@ public class HomeFragment extends Fragment {
         switchDialect = view.findViewById(R.id.switchDialect);
         input = view.findViewById(R.id.etInput);
         translation = view.findViewById(R.id.tvTranslation);
+
+        like = view.findViewById(R.id.likeIcon);
+        copy = view.findViewById(R.id.copyIcon);
+        speech = view.findViewById(R.id.volumeIcon);
 
         // Initialize translation maps
         tagalogToKapampangan = new HashMap<>();
@@ -151,7 +162,35 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        textToSpeech = new TextToSpeech(getContext(), status -> {
+            if (status == TextToSpeech.SUCCESS) {
+                // Set the language to Tagalog
+                Locale tagalogLocale = new Locale("tl", "PH");
+                int result = textToSpeech.setLanguage(tagalogLocale);
+            } else {
+                Toast.makeText(getContext(), "Text-to-Speech initialization failed.", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        speech.setOnClickListener(v -> {
+            String textToSpeak = translation.getText().toString();
+            if (!textToSpeak.equals("Translation") && !textToSpeak.equals("Translation not available.")) {
+                if (textToSpeech != null) {
+                    textToSpeech.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
+                }
+            }
+        });
+
+
         return view;
 
+    }
+    @Override
+    public void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 }
