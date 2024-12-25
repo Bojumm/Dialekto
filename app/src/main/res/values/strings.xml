@@ -4,7 +4,6 @@
     <!-- Other string resources -->
     <string-array name="dialect_options">
         <item>Tagalog</item>
-        <item>Cebuano</item>
         <item>Kapampangan</item>
     </string-array>
 </resources>
