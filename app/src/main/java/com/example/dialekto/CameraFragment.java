@@ -20,8 +20,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LifecycleOwner;
 
+import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
@@ -50,6 +57,10 @@ public class CameraFragment extends Fragment {
     private ImageButton switchD;
     private TextToSpeech textToSpeech;
 
+    private PreviewView previewView;
+    private boolean isImageCaptured = false;
+
+
     private Spinner dialect1;
     private Spinner dialect2;
 
@@ -73,6 +84,8 @@ public class CameraFragment extends Fragment {
         imageView = view.findViewById(R.id.imageView);
         button = view.findViewById(R.id.button);
         translation = view.findViewById(R.id.tvTranslation);
+        previewView = view.findViewById(R.id.previewView);
+        startCamera();
         //
         like = view.findViewById(R.id.likeIcon);
         speech = view.findViewById(R.id.volumeIcon);
@@ -147,8 +160,14 @@ public class CameraFragment extends Fragment {
 
         copy.setOnClickListener(v -> copyTextToClipboard());
 
-        /* Open the camera automatically when the fragment starts
-        openCamera();*/
+        // Set the visibility based on whether an image has been captured
+        if (isImageCaptured) {
+            previewView.setVisibility(View.GONE);
+            imageView.setVisibility(View.VISIBLE);
+        } else {
+            previewView.setVisibility(View.VISIBLE);
+            imageView.setVisibility(View.GONE);
+        }
 
         // Set a listener to capture the image on button click
         button.setOnClickListener(v -> openCamera());
@@ -169,7 +188,6 @@ public class CameraFragment extends Fragment {
             }
         });
 
-
         speech.setOnClickListener(v -> {
             String textToSpeak = translation.getText().toString();
             if (textToSpeak.equals("") || textToSpeak.equals("Translation..") || textToSpeak.equals("Translation not available.")) {
@@ -186,6 +204,29 @@ public class CameraFragment extends Fragment {
 
         return view;
     }
+    private void startCamera() {
+        ListenableFuture<ProcessCameraProvider> cameraProviderFuture =
+                ProcessCameraProvider.getInstance(requireContext());
+
+        cameraProviderFuture.addListener(() -> {
+            try {
+                ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+
+                CameraSelector cameraSelector = new CameraSelector.Builder()
+                        .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                        .build();
+
+                Preview preview = new Preview.Builder().build();
+                preview.setSurfaceProvider(previewView.getSurfaceProvider());
+
+                cameraProvider.unbindAll();
+                cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, ContextCompat.getMainExecutor(requireContext()));
+    }
+
 
     private void openCamera() {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -206,6 +247,13 @@ public class CameraFragment extends Fragment {
                 // Convert the Bitmap to a URI and start UCrop for cropping
                 imageUri = getImageUri(capturedImage);
                 startCrop(imageUri);
+
+                // Set flag to true to indicate that an image has been captured
+                isImageCaptured = true;
+                // Hide the camera preview and show the image view
+                previewView.setVisibility(View.GONE);
+                imageView.setVisibility(View.VISIBLE);
+
             } else if (requestCode == UCrop.REQUEST_CROP) {
                 // Handle the cropped image
                 Uri resultUri = UCrop.getOutput(data);
@@ -216,11 +264,6 @@ public class CameraFragment extends Fragment {
                     extractTextFromImage(resultUri);
                     Toast.makeText(getContext(), "Image cropped successfully!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        } else if (resultCode == UCrop.RESULT_ERROR) {
-            Throwable cropError = UCrop.getError(data);
-            if (cropError != null) {
-                Toast.makeText(getContext(), "Error cropping image: " + cropError.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else {
             Toast.makeText(getContext(), "Image capture canceled.", Toast.LENGTH_SHORT).show();
@@ -241,16 +284,26 @@ public class CameraFragment extends Fragment {
     }
 
     private void startCrop(Uri uri) {
+        // Define the destination file for the cropped image
+        Uri destinationUri = Uri.fromFile(new File(requireContext().getCacheDir(), "cropped_image.jpg"));
+
+        // Set the cropping options
+        UCrop.Options options = new UCrop.Options();
+        options.setCompressionQuality(100);  // Set compression quality to 100 for no compression (highest quality)
+        options.setMaxBitmapSize(1500); // Set the maximum bitmap size for cropping (optional)
+        options.setCircleDimmedLayer(false);  // Optional: disables circular crop
+
         // Start UCrop for cropping
-        UCrop.of(uri, Uri.fromFile(new File(requireContext().getCacheDir(), "cropped_image.jpg")))
-                .withAspectRatio(1, 1) // Set aspect ratio (optional)
+        UCrop.of(uri, destinationUri)
+                .withAspectRatio(1, 1)  // Set aspect ratio (optional)
+                .withOptions(options)  // Apply custom options
                 .start(requireContext(), this);
+
     }
 
     private void extractTextFromImage(Uri imageUri) {
         try {
             InputImage inputImage = InputImage.fromFilePath(requireContext(), imageUri);
-
             // Pass TextRecognizerOptions to get the client
             TextRecognizer recognizer = TextRecognition.getClient(new TextRecognizerOptions.Builder().build());
 
@@ -264,7 +317,7 @@ public class CameraFragment extends Fragment {
                         translation.setText(imageText);
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Text recognition failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "No Text Available, Please Try Again.", Toast.LENGTH_SHORT).show();
                     });
         } catch (IOException e) {
             e.printStackTrace();
