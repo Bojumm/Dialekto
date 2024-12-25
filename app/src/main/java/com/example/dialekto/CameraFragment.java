@@ -1,162 +1,213 @@
 package com.example.dialekto;
 
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.Manifest;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.camera.core.Camera;
-import androidx.camera.core.CameraSelector;
-import androidx.camera.core.ImageCapture;
-import androidx.camera.core.ImageCaptureException;
-import androidx.camera.core.Preview;
-import androidx.camera.lifecycle.ProcessCameraProvider;
-import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.text.TextRecognition;
+import com.google.mlkit.vision.text.TextRecognizer;
+import com.google.mlkit.vision.text.latin.TextRecognizerOptions;
+import com.yalantis.ucrop.UCrop;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Locale;
-import java.util.concurrent.ExecutionException;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.text.TextUtils;
+
 
 public class CameraFragment extends Fragment {
-    private static final int REQUEST_CAMERA_PERMISSION = 1;
-    private PreviewView previewView;
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private ImageView imageView;
     private ImageButton button;
-    private ImageCapture imageCapture;
-    private ProcessCameraProvider cameraProvider;
-
-    //For Icon
-    private ImageView like, copy, speech;
+    private Uri imageUri;
+    private TextView textView;
+    private ImageView like, speech, copy;
     private TextToSpeech textToSpeech;
 
-
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getActivity().setTitle("Camera");
-        View view = inflater.inflate(R.layout.camera_fragment, null);
+        View view = inflater.inflate(R.layout.camera_fragment, container, false);
 
         // Initialize views
-        previewView = view.findViewById(R.id.previewView);
+        imageView = view.findViewById(R.id.imageView);
         button = view.findViewById(R.id.button);
-
+        textView = view.findViewById(R.id.tvTranslation);
+        //
         like = view.findViewById(R.id.likeIcon);
-        copy = view.findViewById(R.id.copyIcon);
         speech = view.findViewById(R.id.volumeIcon);
+        copy = view.findViewById(R.id.copyIcon);
 
-        // Check for camera permission
-        if (ActivityCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), new String[]{android.Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
-        } else {
-            startCamera();  // Start the camera if permission is granted
-        }
+        copy.setOnClickListener(v -> copyTextToClipboard());
 
-        button.setOnClickListener(v -> captureImage());
 
-        textToSpeech = new TextToSpeech(getContext(), status -> {
-            if (status == TextToSpeech.SUCCESS) {
-                // Set the language to Tagalog
-                Locale tagalogLocale = new Locale("tl", "PH");
-                int result = textToSpeech.setLanguage(tagalogLocale);
-            } else {
-                Toast.makeText(getContext(), "Text-to-Speech initialization failed.", Toast.LENGTH_LONG).show();
+        /* Open the camera automatically when the fragment starts
+        openCamera();*/
+
+        // Set a listener to capture the image on button click
+        button.setOnClickListener(v -> openCamera());
+
+        // Initialize TextToSpeech
+        textToSpeech = new TextToSpeech(getContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if (status == TextToSpeech.SUCCESS) {
+                    // Set the language to Filipino (Tagalog)
+                    int langResult = textToSpeech.setLanguage(Locale.forLanguageTag("fil"));
+                    if (langResult == TextToSpeech.LANG_MISSING_DATA || langResult == TextToSpeech.LANG_NOT_SUPPORTED) {
+                        Toast.makeText(getContext(), "Language is not supported or missing data", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Text-to-Speech initialization failed", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
-        /* Pag natpos na yung OCR eto ung sa TTS
+
+        // Set up the OnClickListener for the volume icon
         speech.setOnClickListener(v -> {
-            String textToSpeak = translation.getText().toString();
-            if (!textToSpeak.equals("Translation") && !textToSpeak.equals("Translation not available.")) {
-                if (textToSpeech != null) {
-                    textToSpeech.speak(textToSpeak, TextToSpeech.QUEUE_FLUSH, null, null);
-                }
+            String textToRead = textView.getText().toString();
+            if (!textToRead.isEmpty()) {
+                textToSpeech.speak(textToRead, TextToSpeech.QUEUE_FLUSH, null, null);
+            } else {
+                Toast.makeText(getContext(), "No text to speak", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
+
 
         return view;
     }
 
-    private void startCamera() {
-        // Initialize the CameraX provider
-        ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
-        cameraProviderFuture.addListener(() -> {
-            try {
-                // Get the camera provider
-                cameraProvider = cameraProviderFuture.get();
-                bindCameraUseCases();
-            } catch (ExecutionException | InterruptedException e) {
-                Toast.makeText(getContext(), "Camera initialization failed", Toast.LENGTH_SHORT).show();
-            }
-        }, ContextCompat.getMainExecutor(requireContext()));
-    }
-
-    private void bindCameraUseCases() {
-        // Create a camera selector to choose the back camera
-        CameraSelector cameraSelector = new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
-
-        // Create a preview use case
-        Preview preview = new Preview.Builder().build();
-        preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
-        // Create an image capture use case
-        imageCapture = new ImageCapture.Builder().build();
-
-        // Bind use cases to the camera
-        cameraProvider.unbindAll();
-        Camera camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview, imageCapture);
-    }
-
-    private void captureImage() {
-        // Create a file to save the captured image
-        File photoFile = new File(requireContext().getExternalFilesDir(null), "photo.jpg");
-
-        // Create a photo capture request
-        ImageCapture.OutputFileOptions outputOptions = new ImageCapture.OutputFileOptions.Builder(photoFile).build();
-
-        // Take the picture
-        imageCapture.takePicture(
-                outputOptions,
-                ContextCompat.getMainExecutor(requireContext()),
-                new ImageCapture.OnImageSavedCallback() {
-                    @Override
-                    public void onImageSaved(@NonNull ImageCapture.OutputFileResults outputFileResults) {
-                        // Handle the saved image (e.g., show a toast or display it in an ImageView)
-                        Toast.makeText(getContext(), "Image saved: " + photoFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(@NonNull ImageCaptureException exception) {
-                        // Handle error
-                        Toast.makeText(getContext(), "Image capture failed: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                }
-        );
+    private void openCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(requireActivity().getPackageManager()) != null) {
+            startActivityForResult(cameraIntent, REQUEST_IMAGE_CAPTURE);
+        } else {
+            Toast.makeText(getContext(), "No camera app found!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CAMERA_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCamera();
-            } else {
-                Toast.makeText(getContext(), "Camera permission is required to take photos", Toast.LENGTH_SHORT).show();
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == getActivity().RESULT_OK) {
+            if (requestCode == REQUEST_IMAGE_CAPTURE) {
+                // Get the captured image as a Bitmap
+                Bitmap capturedImage = (Bitmap) data.getExtras().get("data");
+                // Convert the Bitmap to a URI and start UCrop for cropping
+                imageUri = getImageUri(capturedImage);
+                startCrop(imageUri);
+            } else if (requestCode == UCrop.REQUEST_CROP) {
+                // Handle the cropped image
+                Uri resultUri = UCrop.getOutput(data);
+                if (resultUri != null) {
+                    // Set the cropped image to the ImageView
+                    imageView.setImageURI(resultUri);
+                    // Perform text extraction on the cropped image
+                    extractTextFromImage(resultUri);
+                    Toast.makeText(getContext(), "Image cropped successfully!", Toast.LENGTH_SHORT).show();
+                }
             }
+        } else if (resultCode == UCrop.RESULT_ERROR) {
+            Throwable cropError = UCrop.getError(data);
+            if (cropError != null) {
+                Toast.makeText(getContext(), "Error cropping image: " + cropError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getContext(), "Image capture canceled.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    // Convert Bitmap to Uri
+    private Uri getImageUri(Bitmap bitmap) {
+        // Save the bitmap to a temporary file and return the Uri
+        // You can customize this part to save the image to a specific location
+        File tempFile = new File(requireContext().getCacheDir(), "temp_image.jpg");
+        try (FileOutputStream out = new FileOutputStream(tempFile)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return Uri.fromFile(tempFile);
+    }
+
+    private void startCrop(Uri uri) {
+        // Start UCrop for cropping
+        UCrop.of(uri, Uri.fromFile(new File(requireContext().getCacheDir(), "cropped_image.jpg")))
+                .withAspectRatio(1, 1) // Set aspect ratio (optional)
+                .start(requireContext(), this);
+    }
+
+    private void extractTextFromImage(Uri imageUri) {
+        try {
+            InputImage inputImage = InputImage.fromFilePath(requireContext(), imageUri);
+
+            // Pass TextRecognizerOptions to get the client
+            TextRecognizer recognizer = TextRecognition.getClient(new TextRecognizerOptions.Builder().build());
+
+            recognizer.process(inputImage)
+                    .addOnSuccessListener(text -> {
+                        // Handle the recognized text
+                        String recognizedText = text.getText();
+                        // Display the recognized text in the TextView
+                        textView.setText(recognizedText);
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(getContext(), "Text recognition failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void copyTextToClipboard() {
+        String textToCopy = textView.getText().toString();
+
+        // Check if the TextView has any text
+        if (!TextUtils.isEmpty(textToCopy)) {
+            // Get the ClipboardManager system service
+            ClipboardManager clipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+            // Create a ClipData with the text to copy
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Recognized Text", textToCopy);
+
+            // Set the clip data to the clipboard
+            clipboard.setPrimaryClip(clip);
+
+            // Show a Toast to notify the user
+            Toast.makeText(getContext(), "Text copied to clipboard!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "No text to copy", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        if (textToSpeech != null) {
+            textToSpeech.stop();
+            textToSpeech.shutdown();
+        }
+        super.onDestroy();
     }
 }

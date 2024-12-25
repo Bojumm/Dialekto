@@ -1,9 +1,12 @@
 package com.example.dialekto;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +57,8 @@ public class HomeFragment extends Fragment {
         like = view.findViewById(R.id.likeIcon);
         copy = view.findViewById(R.id.copyIcon);
         speech = view.findViewById(R.id.volumeIcon);
+
+        copy.setOnClickListener(v -> copyTextToClipboard());
 
         // Initialize translation maps
         tagalogToKapampangan = new HashMap<>();
@@ -185,6 +190,28 @@ public class HomeFragment extends Fragment {
         return view;
 
     }
+
+    private void copyTextToClipboard() {
+        String textToCopy = translation.getText().toString();
+
+        // Check if the TextView has any text
+        if (!TextUtils.isEmpty(textToCopy)) {
+            // Get the ClipboardManager system service
+            ClipboardManager clipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+            // Create a ClipData with the text to copy
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Recognized Text", textToCopy);
+
+            // Set the clip data to the clipboard
+            clipboard.setPrimaryClip(clip);
+
+            // Show a Toast to notify the user
+            Toast.makeText(getContext(), "Text copied to clipboard!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "No text to copy", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onDestroy() {
         if (textToSpeech != null) {
