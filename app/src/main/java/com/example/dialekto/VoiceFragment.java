@@ -2,12 +2,15 @@ package com.example.dialekto;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.speech.tts.TextToSpeech;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +59,7 @@ public class VoiceFragment extends Fragment {
         translation = view.findViewById(R.id.translationText);
 
         like = view.findViewById(R.id.likeIcon);
-        copy = view.findViewById(R.id.copyIcon);
+        copy = view.findViewById(R.id.CopyIcon);
         speech = view.findViewById(R.id.volumeIcon);
 
         // Initialize translation maps
@@ -64,19 +67,19 @@ public class VoiceFragment extends Fragment {
         kapampanganToTagalog = new HashMap<>();
 
         // Add translations to the maps
-        tagalogToKapampangan.put("mahal kita", "Kaluguran daka");
-        tagalogToKapampangan.put("kamusta ka?", "Musta ka?");
-        tagalogToKapampangan.put("salamat", "Dakal a salamat");
-        tagalogToKapampangan.put("magandang umaga", "Magandang aldo");
-        tagalogToKapampangan.put("paalam", "Pamagbayu");
-        tagalogToKapampangan.put("tang ina mo", "Ima mu");
+        tagalogToKapampangan.put("Mahal kita", "Kaluguran daka"); tagalogToKapampangan.put("mahal kita", "Kaluguran daka");
+        tagalogToKapampangan.put("Kamusta ka", "Musta ka"); tagalogToKapampangan.put("kamusta ka", "Musta ka");
+        tagalogToKapampangan.put("Salamat", "Dakal a salamat"); tagalogToKapampangan.put("salamat", "Dakal a salamat");
+        tagalogToKapampangan.put("Magandang umaga", "Magandang aldo"); tagalogToKapampangan.put("magandang umaga", "Magandang aldo");
+        tagalogToKapampangan.put("Paalam", "Pamagbayu"); tagalogToKapampangan.put("paalam", "Pamagbayu");
+        tagalogToKapampangan.put("Tang ina mo", "Ima mu"); tagalogToKapampangan.put("tang ina mo", "Ima mu");
 
-        kapampanganToTagalog.put("kaluguran daka", "Mahal kita");
-        kapampanganToTagalog.put("musta ka?", "Kamusta ka?");
-        kapampanganToTagalog.put("dakal a salamat", "Salamat");
-        kapampanganToTagalog.put("magandang aldo", "Magandang umaga");
-        kapampanganToTagalog.put("mamagbayu", "Paalam");
-        kapampanganToTagalog.put("ima mu", "Tang ina mo");
+        kapampanganToTagalog.put("Kaluguran daka", "Mahal kita"); kapampanganToTagalog.put("kaluguran daka", "Mahal kita");
+        kapampanganToTagalog.put("Musta ka", "Kamusta ka"); kapampanganToTagalog.put("musta ka", "Kamusta ka");
+        kapampanganToTagalog.put("Dakal a salamat", "Salamat"); kapampanganToTagalog.put("dakal a salamat", "Salamat");
+        kapampanganToTagalog.put("Magandang aldo", "Magandang umaga"); kapampanganToTagalog.put("magandang aldo", "Magandang umaga");
+        kapampanganToTagalog.put("Pamagbayu", "Paalam"); kapampanganToTagalog.put("pamagbayu", "Paalam");
+        kapampanganToTagalog.put("Ima mu", "Tang ina mo"); kapampanganToTagalog.put("ima mu", "Tang ina mo");
 
         List<String> dialects = new ArrayList<>();
         dialects.add("Tagalog");
@@ -124,6 +127,8 @@ public class VoiceFragment extends Fragment {
             }
 
         });
+
+        copy.setOnClickListener(v -> copyTextToClipboard());
 
         voiceDialect.setOnClickListener(v -> {
             if (speechRecognizer != null) {
@@ -244,14 +249,33 @@ public class VoiceFragment extends Fragment {
         }
     }
 
+    private void copyTextToClipboard() {
+        String textToCopy = translation.getText().toString();
+
+        // Check if the TextView has any text
+        if (!TextUtils.isEmpty(textToCopy)) {
+            // Get the ClipboardManager system service
+            ClipboardManager clipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
+
+            // Create a ClipData with the text to copy
+            android.content.ClipData clip = android.content.ClipData.newPlainText("Recognized Text", textToCopy);
+
+            // Set the clip data to the clipboard
+            clipboard.setPrimaryClip(clip);
+
+            // Show a Toast to notify the user
+            Toast.makeText(getContext(), "Text copied to clipboard!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "No text to copy", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        if (speechRecognizer != null) {
-            speechRecognizer.destroy();
-        }
         if (textToSpeech != null) {
+            textToSpeech.stop();
             textToSpeech.shutdown();
         }
+        super.onDestroy();
     }
 }

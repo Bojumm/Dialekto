@@ -107,11 +107,14 @@
                 />
         </LinearLayout>
     </LinearLayout>
-    <!-- Preview of the camera -->
-    <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
+
+
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="300dp"
-        android:layout_height="250dp"/>
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/baseline_insert_photo_24" />
 
     <ImageButton
         android:id="@+id/button"
@@ -136,7 +139,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="16dp"
-            android:text="Translation"
+            android:hint="Translation.."
             android:textColor="@color/black"
             android:textSize="18sp"
             android:background="@drawable/rounded_edittext"
