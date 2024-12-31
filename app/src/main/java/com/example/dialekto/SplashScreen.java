@@ -17,12 +17,12 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
 
+        // Delay for 3 seconds
         new Handler().postDelayed(() -> {
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment())
-                    .commit();
+            Intent intent = new Intent(SplashScreen.this, Login.class);
+            startActivity(intent);
             finish();
-        }, 3000);
+        }, 3000); // 3 seconds
 
     }
 }

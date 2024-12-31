@@ -22,7 +22,7 @@
         android:id="@+id/iconImage"
         android:layout_width="150dp"
         android:layout_height="150dp"
-        android:src="@drawable/dialekto"
+        android:src="@drawable/logo"
         android:scaleType="centerCrop"
         android:layout_below="@id/appTitle"
         android:layout_centerHorizontal="true"
