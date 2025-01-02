@@ -27,20 +27,20 @@
         android:text="Dialekto"/>
 
     <EditText
-        android:id="@+id/editText_Email"
+        android:id="@+id/editText_EmailLog"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Email"
+        android:hint="Enter Email"
         android:inputType="textEmailAddress"
         android:background="@drawable/edittext_border"
         android:padding="10dp"
         android:layout_marginTop="80dp"/>
 
     <EditText
-        android:id="@+id/editText_password"
+        android:id="@+id/editText_passwordLog"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
-        android:hint="Password"
+        android:hint="Enter Password"
         android:inputType="textPassword"
         android:background="@drawable/edittext_border"
         android:padding="10dp"
@@ -140,5 +140,11 @@
         android:text="Not a member yet? Sign Up"
         android:layout_gravity="center"
         android:textColor="@color/black"/>
+
+    <ProgressBar
+        android:id="@+id/loadings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </LinearLayout>
