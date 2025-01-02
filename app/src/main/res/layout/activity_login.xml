@@ -37,7 +37,7 @@
         android:layout_marginTop="80dp"/>
 
     <EditText
-        android:id="editText_Password"
+        android:id="@+id/editText_password"
         android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:hint="Password"
@@ -134,6 +134,7 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView_signUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Not a member yet? Sign Up"
