@@ -7,4 +7,9 @@
         <item>Tagalog</item>
         <item>Kapampangan</item>
     </string-array>
+
+    <string name="facebook_app_id">1944049469452392</string>
+    <string name="facebook_client_token">a04b6fee7c23e0222513e86c7ec8c57c</string>
+
+
 </resources>

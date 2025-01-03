@@ -63,6 +63,12 @@ dependencies {
     //Text Recognition
     implementation 'com.google.mlkit:text-recognition:16.0.0'
 
+    //facebook login
+    implementation 'com.facebook.android:facebook-android-sdk:latest.release'
+
+    implementation 'com.facebook.android:facebook-login:15.0.1'// Update version if needed
+    //implementation 'com.google.firebase:firebase-auth:22.1.1'  // Adjust to latest
+
 
 
 }
