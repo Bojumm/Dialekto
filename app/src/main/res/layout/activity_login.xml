@@ -34,6 +34,7 @@
         android:inputType="textEmailAddress"
         android:background="@drawable/edittext_border"
         android:padding="10dp"
+        android:textSize="16sp"
         android:layout_marginTop="80dp"/>
 
     <EditText
@@ -44,6 +45,7 @@
         android:inputType="textPassword"
         android:background="@drawable/edittext_border"
         android:padding="10dp"
+        android:textSize="16sp"
         android:layout_marginTop="10dp"/>
 
     <TextView

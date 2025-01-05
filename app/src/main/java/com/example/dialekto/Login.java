@@ -191,6 +191,7 @@ public class Login extends AppCompatActivity {
                     String userType = "" + snapshot.child("userType").getValue();
                     if (userType.equals("user")) {
                         startActivity(new Intent(Login.this, DashboardLogin.class));
+                        Toast.makeText(Login.this, "Login Successfull", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
