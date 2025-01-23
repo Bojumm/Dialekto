@@ -29,15 +29,16 @@ public class FavoriteFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // Sample data
-        List<CardItem> cardItems = new ArrayList<>();
-        cardItems.add(new CardItem("Tagalog", "kamusta"));
-        cardItems.add(new CardItem("Cebuano", "Naunsa ka"));
-        cardItems.add(new CardItem("Ilocano", "Naimbag nga rabii"));
+        // Pass the context to getInstance()
+        FavoritesManager favoritesManager = FavoritesManager.getInstance(requireContext());
+
+        // Get the shared favorites list
+        List<CardItem> favoriteItems = favoritesManager.getFavoriteItems();
 
         // Set the adapter
-        CardAdapter adapter = new CardAdapter(cardItems);
+        CardAdapter adapter = new CardAdapter(favoriteItems);
         recyclerView.setAdapter(adapter);
+
         return view;
     }
 }

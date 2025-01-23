@@ -34,7 +34,7 @@ public class SplashScreen extends AppCompatActivity {
                 startActivity(new Intent(SplashScreen.this, DashboardLogin.class));
             } else {
                 // No user logged in, redirect to Login
-                startActivity(new Intent(SplashScreen.this, Login.class));
+                startActivity(new Intent(SplashScreen.this, WelcomeActivity.class));
             }
             finish();
             return; // Exit to prevent further checks

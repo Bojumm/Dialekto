@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +30,9 @@ public class DashboardLogin extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private ImageButton menuButton;
     private TextView usernameTextView, emailTextView;
+    private Button easy, medium, hard;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,12 +43,42 @@ public class DashboardLogin extends AppCompatActivity {
 
         menuButton = findViewById(R.id.menu);
         drawerLayout = findViewById(R.id.drawer_layout);
+        easy = findViewById(R.id.easy);
+        medium = findViewById(R.id.medium);
+        hard = findViewById(R.id.hard);
 
         // Set up the navigation header views
         NavigationView navigationView = findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0); // Get the header view
         usernameTextView = headerView.findViewById(R.id.name); // Username TextView
         emailTextView = headerView.findViewById(R.id.email); // Email TextView
+
+        // quiz button navigation
+
+        easy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardLogin.this, EasyQuiz.class));
+                finish();
+            }
+        });
+
+        medium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardLogin.this, MediumQuiz.class));
+                finish();
+            }
+        });
+
+        hard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(DashboardLogin.this, HardQuiz.class));
+                finish();
+            }
+        });
+
 
         // Set up the menu button to open the drawer
         menuButton.setOnClickListener(view -> {
@@ -110,5 +143,20 @@ public class DashboardLogin extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void onBackPressed() {
+        // Check if the user is logged in
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            // If logged in, go to the home screen (launcher activity) of the phone
+            Intent homeIntent = new Intent(Intent.ACTION_MAIN);
+            homeIntent.addCategory(Intent.CATEGORY_HOME);
+            homeIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(homeIntent);
+        } else {
+            // If not logged in, proceed with default back button behavior
+            super.onBackPressed();
+        }
     }
 }

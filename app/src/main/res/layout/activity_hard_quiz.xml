@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#AEDEF4"
+    android:orientation="vertical"
+    tools:context=".HardQuiz">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp">
+
+        <TextView
+            android:id="@+id/QuestionNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:text="1/10"
+            android:textAlignment="center"
+            android:textColor="#F88058"
+            android:textSize="23sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/question"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="60dp"
+            android:text="Question Here"
+            android:textAlignment="center"
+            android:textColor="#040404"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/FirstTwoOption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:orientation="vertical"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
+
+            <TextView
+                android:id="@+id/optionA"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/option_default"
+                android:paddingTop="14dp"
+                android:text="option A"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:textAlignment="center"
+                android:textColor="#272343" />
+
+            <TextView
+                android:id="@+id/optionB"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/option_default"
+                android:paddingTop="14dp"
+                android:textSize="16sp"
+                android:text="option B"
+                android:clickable="true"
+                android:textAlignment="center"
+                android:textColor="#272343" />
+
+            <TextView
+                android:id="@+id/optionC"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/option_default"
+                android:paddingTop="14dp"
+                android:textSize="16sp"
+                android:text="option C"
+                android:clickable="true"
+                android:textAlignment="center"
+                android:textColor="#272343" />
+
+            <TextView
+                android:id="@+id/optionD"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginTop="35dp"
+                android:background="@drawable/option_default"
+                android:paddingTop="14dp"
+                android:textSize="16sp"
+                android:clickable="true"
+                android:text="option D"
+                android:textAlignment="center"
+                android:textColor="#272343" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="70dp"
+            android:gravity="center"
+            android:paddingRight="10dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/check"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Check"
+                android:layout_marginEnd="27dp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:background="@drawable/button_background"
+                tools:ignore="MissingConstraints" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/next"
+                android:layout_width="130dp"
+                android:layout_height="wrap_content"
+                android:text="Next"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:background="@drawable/button_background"
+                tools:ignore="MissingConstraints"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

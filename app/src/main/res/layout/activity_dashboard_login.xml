@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#AEDEF4"
     tools:context=".DashboardLogin">
 
     <!-- Main Content Layout -->
@@ -13,30 +14,101 @@
         android:layout_height="match_parent">
 
         <!-- Your existing content (button, menu, etc.) -->
-        <ImageView
-            android:id="@+id/TextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/lopit"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
 
         <LinearLayout
+            android:id="@+id/linearLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            tools:ignore="DuplicateIds,MissingConstraints">
 
             <ImageButton
                 android:id="@+id/menu"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
+                android:layout_margin="8dp"
+                android:background="#AEDEF4"
                 android:clickable="true"
-                android:src="@drawable/baseline_menu_24"
-                android:background="@android:color/background_light"
-                android:layout_margin="8dp" />
+                android:src="@drawable/baseline_menu_24" />
         </LinearLayout>
+
+            <!-- App Title -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="700dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
+
+        <ImageView
+            android:id="@+id/iconImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/logo"
+            android:layout_marginTop="80dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="145dp" />
+
+
+        <TextView
+            android:id="@+id/diak"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="@font/aclonica"
+            android:text="Dialekto Quiz"
+            android:textColor="@android:color/black"
+            android:textSize="36sp"
+            app:layout_constraintTop_toBottomOf="@+id/iconImage"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="75dp" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/easy"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="120dp"
+            android:text="Easy"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            app:layout_constraintTop_toBottomOf="@+id/diak"
+            android:background="@drawable/button_background"
+            tools:layout_editor_absoluteX="55dp"
+            tools:ignore="MissingConstraints,NotSibling" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/medium"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Medium"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:background="@drawable/button_background"
+            app:layout_constraintTop_toBottomOf="@+id/easy"
+            tools:layout_editor_absoluteX="55dp"
+            tools:ignore="MissingConstraints" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/hard"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:text="Hard"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:background="@drawable/button_background"
+            app:layout_constraintTop_toBottomOf="@+id/medium"
+            tools:layout_editor_absoluteX="55dp"
+            tools:ignore="MissingConstraints" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- Navigation drawer -->

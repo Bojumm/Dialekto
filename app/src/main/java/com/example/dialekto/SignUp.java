@@ -1,9 +1,12 @@
 package com.example.dialekto;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -102,7 +105,7 @@ public class SignUp extends AppCompatActivity {
                             clearInputFields();
                         } else {
                             // If sign in fails, display a message to the user.
-                            Toast.makeText(SignUp.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SignUp.this, "The email address is already in use by another account.", Toast.LENGTH_SHORT).show();
 
                         }
                     }
@@ -141,16 +144,21 @@ public class SignUp extends AppCompatActivity {
         //get current user uid, since user is registered so we can get now
         String uid = FirebaseAuth.getInstance().getUid();
 
-        String username = s_email.getText().toString();
+        // Get the name and email from the input fields
         String name = s_name.getText().toString();
+        Log.d("SignUp", "Name captured: " + name);
+        // Get email from the FirebaseUser object after the user is authenticated
+        FirebaseUser user = mAuth.getCurrentUser();
+        String email = user != null ? user.getEmail() : ""; // Get the email from FirebaseAuth
 
-        //setup data to add in db
+
+        // Setup data to add in the database
         HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("uid", uid);
-        hashMap.put("email", username);
-        hashMap.put("name", name);
-        hashMap.put("profileImg", "");
-        hashMap.put("userType", "user");/// possible values are user or admin in RDB
+        hashMap.put("email", email);  // Use the email from the input field
+        hashMap.put("name", name);    // Use the name from the input field
+        hashMap.put("profileImg", ""); // Default empty profile image
+        hashMap.put("userType", "user"); // Possible values are "user" or "admin" in the RDB
         hashMap.put("timestamp", timestamp);
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
@@ -160,6 +168,7 @@ public class SignUp extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void unused) {
                         Toast.makeText(SignUp.this, "Account created.", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Name: " + name);
                         clearInputFields();
                         startActivity(new Intent(SignUp.this, Login.class));
                         finish();

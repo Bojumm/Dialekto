@@ -2,6 +2,7 @@ package com.example.dialekto;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LifecycleOwner;
@@ -49,6 +51,9 @@ import android.text.TextUtils;
 
 public class CameraFragment extends Fragment {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+
+    // Add these constants for permissions
+    private static final int CAMERA_PERMISSION_REQUEST_CODE = 100;
     private ImageView imageView;
     private ImageButton button;
     private Uri imageUri;
@@ -69,6 +74,8 @@ public class CameraFragment extends Fragment {
 
     private String imageText = "";
 
+    private String recognizedText = "";
+
     @SuppressLint("MissingInflatedId")
     @Nullable
     @Override
@@ -85,6 +92,7 @@ public class CameraFragment extends Fragment {
         button = view.findViewById(R.id.button);
         translation = view.findViewById(R.id.tvTranslation);
         previewView = view.findViewById(R.id.previewView);
+        checkCameraPermission();
         startCamera();
         //
         like = view.findViewById(R.id.likeIcon);
@@ -103,12 +111,107 @@ public class CameraFragment extends Fragment {
         tagalogToKapampangan.put("Paalam", "Pamagbayu"); tagalogToKapampangan.put("paalam", "Pamagbayu");
         tagalogToKapampangan.put("Tang ina mo", "Ima mu"); tagalogToKapampangan.put("tang ina mo", "Ima mu");
 
+        tagalogToKapampangan.put("Magandang gabi", "Mayap a bengi"); tagalogToKapampangan.put("magandang gabi", "Mayap a bengi");
+        tagalogToKapampangan.put("Magandang hapon", "Mayap a gatpanapun"); tagalogToKapampangan.put("magandang hapon", "Mayap a gatpanapun");
+        tagalogToKapampangan.put("Kumain na", "Mangan naka"); tagalogToKapampangan.put("kumain na", "Mangan naka");
+        tagalogToKapampangan.put("Walang anuman", "Alang anuman"); tagalogToKapampangan.put("walang anuman", "Alang anuman");
+        tagalogToKapampangan.put("Bahay", "Bale"); tagalogToKapampangan.put("bahay", "Bale");
+        tagalogToKapampangan.put("Pamilya", "Pamilyang"); tagalogToKapampangan.put("pamilya", "Pamilyang");
+        tagalogToKapampangan.put("Kaibigan", "Kakaluguran"); tagalogToKapampangan.put("kaibigan", "Kakaluguran");
+        tagalogToKapampangan.put("Opo", "Owa"); tagalogToKapampangan.put("opo", "Owa");
+        tagalogToKapampangan.put("Hindi", "Ali"); tagalogToKapampangan.put("hindi", "Ali");
+
+        tagalogToKapampangan.put("Maligayang bati", "Masayang bati"); tagalogToKapampangan.put("maligayang bati", "Masayang bati");
+        tagalogToKapampangan.put("Magandang araw", "Mayap a aldo"); tagalogToKapampangan.put("magandang araw", "Mayap a aldo");
+        tagalogToKapampangan.put("Anong pangalan mo", "Nanu ing lagyu mu"); tagalogToKapampangan.put("anong pangalan mo", "Nanu ing lagyu mu");
+        tagalogToKapampangan.put("Oo", "Wa"); tagalogToKapampangan.put("oo", "Wa");
+        tagalogToKapampangan.put("Pagkain", "Kakanan"); tagalogToKapampangan.put("pagkain", "Kakanan");
+        tagalogToKapampangan.put("Inom", "Imnan"); tagalogToKapampangan.put("inom", "Imnan");
+        tagalogToKapampangan.put("Bata", "Anak"); tagalogToKapampangan.put("bata", "Anak");
+        tagalogToKapampangan.put("Matanda", "Malati"); tagalogToKapampangan.put("matanda", "Malati");
+        tagalogToKapampangan.put("Guro", "Maestra"); tagalogToKapampangan.put("guro", "Maestra");
+        tagalogToKapampangan.put("Eskwela", "Iskwela"); tagalogToKapampangan.put("eskwela", "Iskwela");
+        tagalogToKapampangan.put("Simula", "Umpisa"); tagalogToKapampangan.put("simula", "Umpisa");
+        tagalogToKapampangan.put("Kaunti", "Dakal"); tagalogToKapampangan.put("kaunti", "Dakal");
+        tagalogToKapampangan.put("Kahapon", "Napon"); tagalogToKapampangan.put("kahapon", "Napon");
+        tagalogToKapampangan.put("Ngayon", "Ngeni"); tagalogToKapampangan.put("ngayon", "Ngeni");
+        tagalogToKapampangan.put("Bukas", "Bukis"); tagalogToKapampangan.put("bukas", "Bukis");
+        tagalogToKapampangan.put("Malapit", "Malapit"); tagalogToKapampangan.put("malapit", "Malapit");
+
+        tagalogToKapampangan.put("Pamilya ko", "Pamilyaku"); tagalogToKapampangan.put("pamilya ko", "Pamilyaku");
+        tagalogToKapampangan.put("Tulong", "Saup"); tagalogToKapampangan.put("tulong", "Saup");
+        tagalogToKapampangan.put("Trabaho", "Obra"); tagalogToKapampangan.put("trabaho", "Obra");
+        tagalogToKapampangan.put("Magkano", "Magkanu"); tagalogToKapampangan.put("magkano", "Magkanu");
+        tagalogToKapampangan.put("Araw", "Aldo"); tagalogToKapampangan.put("araw", "Aldo");
+        tagalogToKapampangan.put("Gabi", "Bengi"); tagalogToKapampangan.put("gabi", "Bengi");
+        tagalogToKapampangan.put("Mahal", "Malagu"); tagalogToKapampangan.put("mahal", "Malagu");
+        tagalogToKapampangan.put("Ulan", "Auran"); tagalogToKapampangan.put("ulan", "Auran");
+        tagalogToKapampangan.put("Init", "Panayan"); tagalogToKapampangan.put("init", "Panayan");
+        tagalogToKapampangan.put("Lakad", "Lakad"); tagalogToKapampangan.put("lakad", "Lakad");
+        tagalogToKapampangan.put("Bilog", "Bilug"); tagalogToKapampangan.put("bilog", "Bilug");
+        tagalogToKapampangan.put("Pag-ibig", "Kaluguran"); tagalogToKapampangan.put("pag-ibig", "Kaluguran");
+        tagalogToKapampangan.put("Panaginip", "Damdam"); tagalogToKapampangan.put("panaginip", "Damdam");
+        tagalogToKapampangan.put("Kasama", "Kuyab"); tagalogToKapampangan.put("kasama", "Kuyab");
+        tagalogToKapampangan.put("Walang tao", "Ala nang tau"); tagalogToKapampangan.put("walang tao", "Ala nang tau");
+        tagalogToKapampangan.put("Pagod", "Pamalaylay"); tagalogToKapampangan.put("pagod", "Pamalaylay");
+        tagalogToKapampangan.put("Masaya", "Masaya"); tagalogToKapampangan.put("masaya", "Masaya");
+        tagalogToKapampangan.put("Malungkot", "Magmuya"); tagalogToKapampangan.put("malungkot", "Magmuya");
+        tagalogToKapampangan.put("Mahalaga", "Maimportante"); tagalogToKapampangan.put("mahalaga", "Maimportante");
+
+        // Vise versa
         kapampanganToTagalog.put("Kaluguran daka", "Mahal kita"); kapampanganToTagalog.put("kaluguran daka", "Mahal kita");
         kapampanganToTagalog.put("Musta ka", "Kamusta ka"); kapampanganToTagalog.put("musta ka", "Kamusta ka");
         kapampanganToTagalog.put("Dakal a salamat", "Salamat"); kapampanganToTagalog.put("dakal a salamat", "Salamat");
         kapampanganToTagalog.put("Magandang aldo", "Magandang umaga"); kapampanganToTagalog.put("magandang aldo", "Magandang umaga");
         kapampanganToTagalog.put("Pamagbayu", "Paalam"); kapampanganToTagalog.put("pamagbayu", "Paalam");
         kapampanganToTagalog.put("Ima mu", "Tang ina mo"); kapampanganToTagalog.put("ima mu", "Tang ina mo");
+
+        kapampanganToTagalog.put("Mayap a bengi", "Magandang gabi"); kapampanganToTagalog.put("mayap a bengi", "Magandang gabi");
+        kapampanganToTagalog.put("Mayap a gatpanapun", "Magandang hapon"); kapampanganToTagalog.put("mayap a gatpanapun", "Magandang hapon");
+        kapampanganToTagalog.put("Mangan naka", "Kumain na"); kapampanganToTagalog.put("mangan naka", "Kumain na");
+        kapampanganToTagalog.put("Alang anuman", "Walang anuman"); kapampanganToTagalog.put("alang anuman", "Walang anuman");
+        kapampanganToTagalog.put("Bale", "Bahay"); kapampanganToTagalog.put("bale", "Bahay");
+        kapampanganToTagalog.put("Pamilyang", "Pamilya"); kapampanganToTagalog.put("pamilyang", "Pamilya");
+        kapampanganToTagalog.put("Kakaluguran", "Kaibigan"); kapampanganToTagalog.put("kakaluguran", "Kaibigan");
+        kapampanganToTagalog.put("Owa", "Opo"); kapampanganToTagalog.put("owa", "Opo");
+        kapampanganToTagalog.put("Ali", "Hindi"); kapampanganToTagalog.put("ali", "Hindi");
+
+        kapampanganToTagalog.put("Masayang bati", "Maligayang bati"); kapampanganToTagalog.put("masayang bati", "Maligayang bati");
+        kapampanganToTagalog.put("Mayap a aldo", "Magandang araw"); kapampanganToTagalog.put("mayap a aldo", "Magandang araw");
+        kapampanganToTagalog.put("Nanu ing lagyu mu", "Anong pangalan mo"); kapampanganToTagalog.put("nanu ing lagyu mu", "Anong pangalan mo");
+        kapampanganToTagalog.put("Wa", "Oo"); kapampanganToTagalog.put("wa", "Oo");
+        kapampanganToTagalog.put("Kakanan", "Pagkain"); kapampanganToTagalog.put("kakanan", "Pagkain");
+        kapampanganToTagalog.put("Imnan", "Inom"); kapampanganToTagalog.put("imnan", "Inom");
+        kapampanganToTagalog.put("Anak", "Bata"); kapampanganToTagalog.put("anak", "Bata");
+        kapampanganToTagalog.put("Malati", "Matanda"); kapampanganToTagalog.put("malati", "Matanda");
+        kapampanganToTagalog.put("Maestra", "Guro"); kapampanganToTagalog.put("maestra", "Guro");
+        kapampanganToTagalog.put("Iskwela", "Eskwela"); kapampanganToTagalog.put("iskwela", "Eskwela");
+        kapampanganToTagalog.put("Umpisa", "Simula"); kapampanganToTagalog.put("umpisa", "Simula");
+        kapampanganToTagalog.put("Dakal", "Kaunti"); kapampanganToTagalog.put("dakal", "Kaunti");
+        kapampanganToTagalog.put("Napon", "Kahapon"); kapampanganToTagalog.put("napon", "Kahapon");
+        kapampanganToTagalog.put("Ngeni", "Ngayon"); kapampanganToTagalog.put("ngeni", "Ngayon");
+        kapampanganToTagalog.put("Bukis", "Bukas"); kapampanganToTagalog.put("bukis", "Bukas");
+        kapampanganToTagalog.put("Malapit", "Malapit"); kapampanganToTagalog.put("malapit", "Malapit");
+
+        kapampanganToTagalog.put("Pamilyaku", "Pamilya ko"); kapampanganToTagalog.put("pamilyaku", "Pamilya ko");
+        kapampanganToTagalog.put("Saup", "Tulong"); kapampanganToTagalog.put("saup", "Tulong");
+        kapampanganToTagalog.put("Obra", "Trabaho"); kapampanganToTagalog.put("obra", "Trabaho");
+        kapampanganToTagalog.put("Magkanu", "Magkano"); kapampanganToTagalog.put("magkanu", "Magkano");
+        kapampanganToTagalog.put("Aldo", "Araw"); kapampanganToTagalog.put("aldo", "Araw");
+        kapampanganToTagalog.put("Bengi", "Gabi"); kapampanganToTagalog.put("bengi", "Gabi");
+        kapampanganToTagalog.put("Malagu", "Mahal"); kapampanganToTagalog.put("malagu", "Mahal");
+        kapampanganToTagalog.put("Auran", "Ulan"); kapampanganToTagalog.put("auran", "Ulan");
+        kapampanganToTagalog.put("Panayan", "Init"); kapampanganToTagalog.put("panayan", "Init");
+        kapampanganToTagalog.put("Lakad", "Lakad"); kapampanganToTagalog.put("lakad", "Lakad");
+        kapampanganToTagalog.put("Bilug", "Bilog"); kapampanganToTagalog.put("bilug", "Bilog");
+        kapampanganToTagalog.put("Kaluguran", "Pag-ibig"); kapampanganToTagalog.put("kaluguran", "Pag-ibig");
+        kapampanganToTagalog.put("Damdam", "Panaginip"); kapampanganToTagalog.put("damdam", "Panaginip");
+        kapampanganToTagalog.put("Kuyab", "Kasama"); kapampanganToTagalog.put("kuyab", "Kasama");
+        kapampanganToTagalog.put("Ala nang tau", "Walang tao"); kapampanganToTagalog.put("ala nang tau", "Walang tao");
+        kapampanganToTagalog.put("Pamalaylay", "Pagod"); kapampanganToTagalog.put("pamalaylay", "Pagod");
+        kapampanganToTagalog.put("Masaya", "Masaya"); kapampanganToTagalog.put("masaya", "Masaya");
+        kapampanganToTagalog.put("Magmuya", "Malungkot"); kapampanganToTagalog.put("magmuya", "Malungkot");
+        kapampanganToTagalog.put("Maimportante", "Mahalaga"); kapampanganToTagalog.put("maimportante", "Mahalaga");
 
         List<String> dialects = new ArrayList<>();
         dialects.add("Tagalog");
@@ -159,6 +262,7 @@ public class CameraFragment extends Fragment {
         });
 
         copy.setOnClickListener(v -> copyTextToClipboard());
+        like.setOnClickListener(v -> AddToFavourite());
 
         // Set the visibility based on whether an image has been captured
         if (isImageCaptured) {
@@ -259,6 +363,7 @@ public class CameraFragment extends Fragment {
                 Uri resultUri = UCrop.getOutput(data);
                 if (resultUri != null) {
                     // Set the cropped image to the ImageView
+                    imageView.setImageDrawable(null);
                     imageView.setImageURI(resultUri);
                     // Perform text extraction on the cropped image
                     extractTextFromImage(resultUri);
@@ -310,11 +415,17 @@ public class CameraFragment extends Fragment {
             recognizer.process(inputImage)
                     .addOnSuccessListener(text -> {
                         // Handle the recognized text
-                        String recognizedText = text.getText();
+                        recognizedText = text.getText();
                         // the recognized text
                         imageText = getTranslation(recognizedText);
-                        // Display the recognized text in the TextView
-                        translation.setText(imageText);
+
+                        // After recognizing the text, perform the translation based on the selected dialects
+                        String translatedText = getTranslation(recognizedText);
+                        if (translatedText != null) {
+                            translation.setText(translatedText);  // Display the translation in the TextView
+                        } else {
+                            translation.setText("Translation not available.");
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Toast.makeText(getContext(), "No Text Available, Please Try Again.", Toast.LENGTH_SHORT).show();
@@ -359,6 +470,58 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    private void AddToFavourite(){
+
+        String inputText = recognizedText;
+        String translationText = translation.getText().toString().trim();
+
+        // Get selected languages
+        String inputLanguage = dialect1.getSelectedItem().toString();
+        String translationLanguage = dialect2.getSelectedItem().toString();
+
+        if (!TextUtils.isEmpty(inputText) && !TextUtils.isEmpty(translationText) &&
+                !translationText.equals("Translation") && !translationText.equals("Translation not available.")) {
+
+            // Add to favorites with language info
+            CardItem favoriteItem = new CardItem(inputText, translationText, inputLanguage, translationLanguage);
+
+            // Pass the context to getInstance()
+            FavoritesManager.getInstance(requireContext()).addFavorite(favoriteItem);
+
+            // Notify the user
+            Toast.makeText(getContext(), "Added to favorites!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "No valid input or translation to add to favorites.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void checkCameraPermission() {
+        // Check if permission is already granted
+        if (ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.CAMERA)
+                == PackageManager.PERMISSION_GRANTED) {
+        } else {
+            // Permission is not granted, request permission
+            ActivityCompat.requestPermissions(requireActivity(),
+                    new String[]{android.Manifest.permission.CAMERA},
+                    CAMERA_PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    // Override the onRequestPermissionsResult method to handle the result
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == CAMERA_PERMISSION_REQUEST_CODE) {
+            // Check if the permission was granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, you can open the camera
+                openCamera();
+            } else {
+                // Permission denied, show a message to the user
+                Toast.makeText(getContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
     @Override
     public void onDestroy() {

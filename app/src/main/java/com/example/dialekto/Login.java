@@ -22,12 +22,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
+//import com.facebook.AccessToken;
+//import com.facebook.CallbackManager;
+//import com.facebook.FacebookException;
+//import com.facebook.FacebookSdk;
+//import com.facebook.login.LoginManager;
+//import com.facebook.login.LoginResult;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -48,7 +48,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import com.facebook.FacebookCallback;
+//import com.facebook.FacebookCallback;
 
 
 
@@ -56,7 +56,7 @@ import java.util.Arrays;
 
 public class Login extends AppCompatActivity {
 
-    private TextView signUp;
+    private TextView signUp, forgotpass;
     private Button login;
 
     private EditText email, pass;
@@ -65,14 +65,14 @@ public class Login extends AppCompatActivity {
     private static final int RC_SIGN_IN = 9001;
 
     FirebaseAuth mAuth;
-    private CallbackManager callbackManager;
+   // private CallbackManager callbackManager;
    // private ProgressBar progressBar;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        //FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
@@ -80,16 +80,17 @@ public class Login extends AppCompatActivity {
         signUp = findViewById(R.id.textView_signUp);
         login = findViewById(R.id.loginButton);
         googleButton = findViewById(R.id.googleButton);
-        facebookButton = findViewById(R.id.facebookButton);
+        forgotpass = findViewById(R.id.forgotpass);
+       //facebookButton = findViewById(R.id.facebookButton);
        // progressBar = findViewById(R.id.loadings);
         email = findViewById(R.id.editText_EmailLog);
         pass = findViewById(R.id.editText_passwordLog);
 
         mAuth = FirebaseAuth.getInstance();
-        callbackManager = CallbackManager.Factory.create();
+        //callbackManager = CallbackManager.Factory.create();
 
-        facebookButton = findViewById(R.id.facebookButton);
-        facebookButton.setOnClickListener(view -> facebookLogin());
+       // facebookButton = findViewById(R.id.facebookButton);
+        // facebookButton.setOnClickListener(view -> facebookLogin());
 
         configureGoogleSignIn();
 
@@ -101,9 +102,17 @@ public class Login extends AppCompatActivity {
         });
 
         googleButton.setOnClickListener(view -> googleSignIn());
+
+        forgotpass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Login.this, ForgotPass.class));
+                finish();
+            }
+        });
     }
 
-    private void facebookLogin() {
+   /* private void facebookLogin() {
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email", "public_profile"));
 
         LoginManager.getInstance().registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
@@ -142,7 +151,7 @@ public class Login extends AppCompatActivity {
                         updateUI(null);
                     }
                 });
-    }
+    } */
 
 
     private void LoginUser(){
@@ -229,7 +238,7 @@ public class Login extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         // Facebook Login
-        callbackManager.onActivityResult(requestCode, resultCode, data);
+       // callbackManager.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);

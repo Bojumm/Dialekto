@@ -49,9 +49,11 @@
         android:layout_marginTop="10dp"/>
 
     <TextView
+        android:id="@+id/forgotpass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Forgot password?"
+        android:clickable="true"
         android:textSize="14sp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="60dp"/>
@@ -65,11 +67,19 @@
         android:textColor="@color/white"
         android:layout_marginTop="14dp"/>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_marginTop="15dp"
+        android:text="OR"
+        android:textAlignment="center"
+        android:textColor="@color/black"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="5dp"
         android:layout_marginBottom="10dp"
         android:gravity="center">
 
@@ -102,35 +112,6 @@
                 android:textColor="@android:color/black"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/googleIcon"
-                android:layout_marginStart="8dp" />
-        </RelativeLayout>
-
-        <!-- Facebook Sign-In Button -->
-        <RelativeLayout
-            android:id="@+id/facebookButton"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_background"
-            android:padding="8dp">
-
-            <ImageView
-                android:id="@+id/facebookIcon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/facebook"
-                android:layout_alignParentStart="true"
-                android:layout_marginStart="16dp"
-                android:layout_centerVertical="true" />
-
-            <TextView
-                android:id="@+id/facebookButtonText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Continue with Facebook"
-                android:textSize="16sp"
-                android:textColor="@android:color/white"
-                android:layout_centerVertical="true"
-                android:layout_toEndOf="@id/facebookIcon"
                 android:layout_marginStart="8dp" />
         </RelativeLayout>
     </LinearLayout>

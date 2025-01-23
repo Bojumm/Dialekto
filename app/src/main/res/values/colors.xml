@@ -12,8 +12,10 @@
     <color name="discover">#F000F0</color>
     <color name="search">#00FF00</color>
     <color name="settings">#0000FF</color>
-
+    <color name="score">#03CD70</color>
     <color name="primary">#3A6D8C</color>
     <color name="secondary">#6A9AB0</color>
     <color name="blue">#227AEB</color>
+    <color name="hover_color">#FFCDD2</color> <!-- Light red for hover -->
+    <color name="default_color">#FFFFFF</color> <!-- White for default -->
 </resources>

@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/remove_favorite"
+        android:icon="@drawable/baseline_delete_24"
+        android:title="Delete" />
+    <item
+        android:id="@+id/cancel"
+        android:icon="@drawable/ic_cancel"
+        android:title="Cancel" />
+
+</menu>

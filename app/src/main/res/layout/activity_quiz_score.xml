@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/secondary"
+    android:backgroundTintMode="multiply">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="30dp"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="20dp"
+        android:background="@drawable/rounded_corrner_button">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_horizontal"
+            android:padding="30dp"
+            android:background="@color/white">
+
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:src="@drawable/logo"
+                />
+
+            <TextView
+                android:id="@+id/congrats"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Congrats!"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/score"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="90% Score"
+                android:textAlignment="center"
+                android:layout_marginTop="10dp"
+                android:textColor="#02DF78"
+                android:textSize="40sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/mess"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Quiz Completed succesfully."
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginTop="10dp"/>
+
+            <TextView
+                android:id="@+id/over"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="teteataeteateateateat"
+                android:textColor="@color/black"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:id="@+id/GobackLesson"
+                android:text="Go back to category"
+                android:textSize="18sp"
+                android:textColor="@color/white"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/button_background"
+                app:cornerRadius = "20dp"/>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
