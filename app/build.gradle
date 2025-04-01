@@ -33,6 +33,7 @@ dependencies {
     // bottom nagivation
     implementation 'com.github.ismaeldivita:chip-navigation-bar:1.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.7.10"
+    implementation 'com.google.code.gson:gson:2.11.0'
 
     implementation 'com.google.android.gms:play-services-base:18.0.1'
     implementation 'com.google.android.material:material:1.10.0'

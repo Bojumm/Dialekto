@@ -81,15 +81,14 @@ public class Login extends AppCompatActivity {
         login = findViewById(R.id.loginButton);
         googleButton = findViewById(R.id.googleButton);
         forgotpass = findViewById(R.id.forgotpass);
-       //facebookButton = findViewById(R.id.facebookButton);
+       // facebookButton = findViewById(R.id.facebookButton);
        // progressBar = findViewById(R.id.loadings);
         email = findViewById(R.id.editText_EmailLog);
         pass = findViewById(R.id.editText_passwordLog);
 
         mAuth = FirebaseAuth.getInstance();
-        //callbackManager = CallbackManager.Factory.create();
-
-       // facebookButton = findViewById(R.id.facebookButton);
+        // callbackManager = CallbackManager.Factory.create();
+        // facebookButton = findViewById(R.id.facebookButton);
         // facebookButton.setOnClickListener(view -> facebookLogin());
 
         configureGoogleSignIn();
@@ -153,23 +152,20 @@ public class Login extends AppCompatActivity {
                 });
     } */
 
-
     private void LoginUser(){
-      //  progressBar.setVisibility(View.VISIBLE);
-
+      // progressBar.setVisibility(View.VISIBLE);
         String username, password;
         username = email.getText().toString();
         password = pass.getText().toString();
 
         if (username.isEmpty()){
-            Toast.makeText(Login.this, "Please enter username", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Login.this, "Please enter Username", Toast.LENGTH_SHORT).show();
             return;
         }
         if (password.isEmpty()){
-            Toast.makeText(Login.this, "Please enter password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(Login.this, "Please enter Password", Toast.LENGTH_SHORT).show();
             return;
         }
-
         mAuth.signInWithEmailAndPassword(username, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
@@ -200,7 +196,7 @@ public class Login extends AppCompatActivity {
                     String userType = "" + snapshot.child("userType").getValue();
                     if (userType.equals("user")) {
                         startActivity(new Intent(Login.this, DashboardLogin.class));
-                        Toast.makeText(Login.this, "Login Successfull", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Login Successfully", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
@@ -229,9 +225,6 @@ public class Login extends AppCompatActivity {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

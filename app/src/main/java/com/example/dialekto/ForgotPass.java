@@ -23,9 +23,7 @@ public class ForgotPass extends AppCompatActivity {
     ImageButton back;
     Button sendemail;
     EditText email;
-
     FirebaseAuth mAuth;
-
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
